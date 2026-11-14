@@ -1,9 +1,8 @@
 import SectionHeadline from "@/components/wizard/common/SectionHeadline"
 import WizardSection from "@/components/wizard/common/WizardSection"
-import { FsuipcOffsetPanel } from "@/components/wizard/components/InputActions/FsuipcOffsetInputActionPanel"
+import { FsuipcOffsetPanel } from "@/components/wizard/common/FsuipcOffsetPanel"
 import { VariablePanel } from "@/components/wizard/common/VariablePanel"
 import MsfsPresetPanel from "@/components/wizard/common/MsfsPresetPanel"
-import ProSimSourcePanel from "@/components/wizard/OutputConfig/Sources/ProSimSourcePanel"
 import SourceTypeComboBox from "@/components/wizard/OutputConfig/SourceTypeComboBox"
 import { SourceTypeOptions } from "@/lib/configWizard"
 import {
@@ -16,9 +15,14 @@ import {
 } from "@/types/config"
 import { SourceDefaults } from "@/types/defaults"
 import { useTranslation } from "react-i18next"
-import { msfsSourceAdapter, xplaneSourceAdapter } from "@/types/presets"
+import {
+  msfsSourceAdapter,
+  proSimSourceAdapter,
+  xplaneSourceAdapter,
+} from "@/types/presets"
 import XplanePresetPanel from "@/components/wizard/common/XplanePresetPanel"
 import DrawerBreadcrumb from "@/components/wizard/common/DrawerTitle"
+import { ProSimPresetPanel } from "@/components/wizard/common/ProSimPresetPanel"
 
 export interface SourceEditorProps {
   configName: string
@@ -131,9 +135,11 @@ const SourceEditor = ({
         </WizardSection>
       )}
       {selectedSourceType?.value === "ProSimSource" && (
-        <ProSimSourcePanel
-          source={source as ProSimSource}
-          onSourceChange={onSourceChange}
+        <ProSimPresetPanel
+          variant="details"
+          adapter={proSimSourceAdapter}
+          config={source as ProSimSource}
+          onConfigChange={onSourceChange}
         />
       )}
     </div>

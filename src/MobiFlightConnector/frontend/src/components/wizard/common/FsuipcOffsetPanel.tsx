@@ -1,24 +1,12 @@
 import { Input } from "@/components/ui/input"
-import {
-  ConfigItemType,
-  FsuipcOffset,
-  FsuipcOffsetInputAction,
-} from "@/types/config"
+import { ConfigItemType, FsuipcOffset } from "@/types/config"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import ComboBox from "@/components/ComboBox"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import CodeValueLabel from "@/components/wizard/components/CodeValueLabel"
-import SectionHeadline from "@/components/wizard/common/SectionHeadline"
-import WizardSection from "@/components/wizard/common/WizardSection"
+import CodeValueLabel from "@/components/wizard/common/CodeValueLabel"
 import { Badge } from "@/components/ui/badge"
-
-export type FsuipcOffsetInputActionPanelProps = {
-  variant: "summary" | "details"
-  config: FsuipcOffsetInputAction | null
-  onConfigChange: (config: FsuipcOffsetInputAction) => void
-}
 
 const FsuipcSizeOptions = [
   { value: 1, label: "1 Byte" },
@@ -27,7 +15,7 @@ const FsuipcSizeOptions = [
   { value: 8, label: "8 Bytes" },
 ]
 
-const FSUIPC_TYPE_INTEGER = 0
+export const FSUIPC_TYPE_INTEGER = 0
 const FSUIPC_TYPE_FLOAT = 1
 const FSUIPC_TYPE_STRING = 2
 
@@ -36,19 +24,6 @@ const FsuipcTypeOptions = [
   { value: FSUIPC_TYPE_FLOAT, label: "Float" },
   { value: FSUIPC_TYPE_STRING, label: "String" },
 ]
-
-const defaultConfig: FsuipcOffsetInputAction = {
-  Type: "FsuipcOffsetInputAction",
-  FSUIPC: {
-    OffsetType: FSUIPC_TYPE_INTEGER,
-    Offset: 0x66c0,
-    Size: 1,
-    Mask: 0xff,
-    BcdMode: false,
-  },
-  Modifiers: [],
-  Value: "",
-}
 
 const filterHexInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
   // Allow only hex characters and control keys
@@ -254,70 +229,3 @@ export const FsuipcOffsetPanel = ({
     </div>
   )
 }
-
-const FsuipcOffsetInputActionPanel = ({
-  variant,
-  config,
-  onConfigChange,
-}: FsuipcOffsetInputActionPanelProps) => {
-  const { t } = useTranslation()
-  const currentConfig = config?.FSUIPC ? config : defaultConfig
-
-  if (variant === "summary") {
-    return (
-      <FsuipcOffsetSummary
-        mode="InputConfigItem"
-        config={currentConfig.FSUIPC}
-        value={currentConfig.Value}
-      />
-    )
-  }
-
-  return (
-    <WizardSection>
-      <SectionHeadline
-        title={t("Dialog.InputConfigWizard.InputActions.FsuipcOffset.Title")}
-        description={t(
-          "Dialog.InputConfigWizard.InputActions.FsuipcOffset.Description",
-        )}
-      />
-      <div className="flex flex-col gap-4">
-        <FsuipcOffsetPanel
-          fsuipc={currentConfig.FSUIPC}
-          onConfigChange={(fsuipc) =>
-            onConfigChange({
-              ...(currentConfig as FsuipcOffsetInputAction),
-              FSUIPC: fsuipc,
-            })
-          }
-        />
-
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="value">
-            {t("Dialog.InputConfigWizard.InputActions.FsuipcOffset.ValueLabel")}
-          </Label>
-          <Input
-            className="font-mono text-sm whitespace-nowrap"
-            id="value"
-            value={currentConfig?.Value ?? ""}
-            onChange={(e) =>
-              onConfigChange({
-                ...(currentConfig as FsuipcOffsetInputAction),
-                Value: e.target.value,
-              })
-            }
-            placeholder={t(
-              "Dialog.InputConfigWizard.InputActions.FsuipcOffset.ValuePlaceholder",
-            )}
-          />
-          <div className="text-muted-foreground text-sm">
-            {t(
-              "Dialog.InputConfigWizard.InputActions.Common.SupportedPlaceholders",
-            )}
-          </div>
-        </div>
-      </div>
-    </WizardSection>
-  )
-}
-export default FsuipcOffsetInputActionPanel

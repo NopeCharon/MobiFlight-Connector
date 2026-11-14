@@ -1,23 +1,23 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import SectionHeadline from "@/components/wizard/common/SectionHeadline"
+import WizardSection from "@/components/wizard/common/WizardSection"
 import messageExchange from "@/lib/messageExchange"
 import { cn } from "@/lib/utils"
 import {
   ProSimDataRefDefinition,
   useProSimDataRefStore,
 } from "@/stores/prosimDataRefStore"
-import { ConfigItemType } from "@/types/config"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 export type ProSimDataRefPanelProps = {
-  mode: ConfigItemType
+  mode: "input" | "output"
   selectedPath: string | null
   onPresetChange: (preset: ProSimDataRefDefinition) => void
 }
 
-const ProSimDataRefPanel = ({
+const ProSimPresetListPanel = ({
   mode,
   selectedPath,
   onPresetChange,
@@ -32,8 +32,8 @@ const ProSimDataRefPanel = ({
   })
 
   const filteredPresets = Object.values(dataRefs).filter((preset) => {
-    if (mode === "InputConfigItem" && !preset.CanWrite) return false
-    if (mode === "OutputConfigItem" && !preset.CanRead) return false
+    if (mode === "input" && !preset.CanWrite) return false
+    if (mode === "output" && !preset.CanRead) return false
     if (
       filter.search &&
       !preset.Description.toLowerCase().includes(filter.search.toLowerCase())
@@ -52,10 +52,12 @@ const ProSimDataRefPanel = ({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <WizardSection>
       <SectionHeadline
         title={t("Dialog.InputConfigWizard.InputActions.Common.Preset.Title")}
-        description={t("Dialog.InputConfigWizard.InputActions.Common.Preset.Description")}
+        description={t(
+          "Dialog.InputConfigWizard.InputActions.Common.Preset.Description",
+        )}
       />
       {filteredPresets.length > 0 ? (
         <div className="flex flex-col gap-4">
@@ -108,8 +110,7 @@ const ProSimDataRefPanel = ({
           </Button>
         </div>
       )}
-      <div></div>
-    </div>
+    </WizardSection>
   )
 }
-export default ProSimDataRefPanel
+export default ProSimPresetListPanel

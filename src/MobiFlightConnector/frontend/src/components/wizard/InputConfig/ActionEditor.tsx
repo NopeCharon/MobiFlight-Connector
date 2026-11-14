@@ -3,18 +3,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import SectionHeadline from "@/components/wizard/common/SectionHeadline"
 import WizardSection from "@/components/wizard/common/WizardSection"
-import ActionTypeComboBox from "@/components/wizard/components/ActionTypeComboBox"
-import CopyPasteActionPanel from "@/components/wizard/components/CopyPasteActionPanel"
-import EventIdInputActionPanel from "@/components/wizard/components/InputActions/EventIdInputActionPanel"
-import FsuipcOffsetInputActionPanel from "@/components/wizard/components/InputActions/FsuipcOffsetInputActionPanel"
-import JeehellInputActionPanel from "@/components/wizard/components/InputActions/JeehellInputActionPanel"
-import KeyboardInputActionPanel from "@/components/wizard/components/InputActions/KeyboardInputActionPanel"
-import LuaMacroInputActionPanel from "@/components/wizard/components/InputActions/LuaMacroInputActionPanel"
+import ActionTypeComboBox from "@/components/wizard/InputConfig/ActionTypeComboBox"
+import CopyPasteActionPanel from "@/components/wizard/InputConfig/CopyPasteActionPanel"
+import EventIdInputActionPanel from "@/components/wizard/InputConfig/InputActions/EventIdInputActionPanel"
+import FsuipcOffsetInputActionPanel from "@/components/wizard/InputConfig/InputActions/FsuipcOffsetInputActionPanel"
+import JeehellInputActionPanel from "@/components/wizard/InputConfig/InputActions/JeehellInputActionPanel"
+import KeyboardInputActionPanel from "@/components/wizard/InputConfig/InputActions/KeyboardInputActionPanel"
+import LuaMacroInputActionPanel from "@/components/wizard/InputConfig/InputActions/LuaMacroInputActionPanel"
 import MsfsPresetPanel from "@/components/wizard/common/MsfsPresetPanel"
-import ProSimInputActionPanel from "@/components/wizard/components/InputActions/ProSimInputActionPanel"
-import RetriggerPanel from "@/components/wizard/components/InputActions/RetriggerPanel"
+import { ProSimPresetPanel } from "@/components/wizard/common/ProSimPresetPanel"
+import RetriggerPanel from "@/components/wizard/InputConfig/InputActions/RetriggerPanel"
 import { VariablePanel } from "@/components/wizard/common/VariablePanel"
-import VJoyInputActionPanel from "@/components/wizard/components/InputActions/VJoyInputActionPanel"
+import VJoyInputActionPanel from "@/components/wizard/InputConfig/InputActions/VJoyInputActionPanel"
 import XplanePresetPanel from "@/components/wizard/common/XplanePresetPanel"
 import { ActionTypeOptions } from "@/lib/configWizard"
 import {
@@ -38,6 +38,7 @@ import { useTranslation } from "react-i18next"
 import {
   msfsInputActionAdapter,
   xplaneInputActionAdapter,
+  proSimInputActionAdapter,
 } from "@/types/presets"
 import DrawerBreadcrumb from "@/components/wizard/common/DrawerTitle"
 export interface ActionEditorProps {
@@ -134,11 +135,10 @@ export const ActionSummary = ({ action }: ActionSummaryProps) => {
           />
         )}
         {selectedActionType?.value === "ProSimInputAction" && (
-          <ProSimInputActionPanel
-            mode="InputConfigItem"
+          <ProSimPresetPanel
             variant="summary"
-            config={action ? (action as ProSimInputAction) : null}
-            onConfigChange={() => {}}
+            adapter={proSimInputActionAdapter}
+            config={action as ProSimInputAction}
           />
         )}
         {selectedActionType?.value === "LuaMacroInputAction" && (
@@ -266,16 +266,11 @@ const ActionPanel = ({
       )
     case "ProSimInputAction":
       return (
-        <ProSimInputActionPanel
-          mode="InputConfigItem"
+        <ProSimPresetPanel
           variant="details"
-          config={action ? (action as ProSimInputAction) : null}
-          onConfigChange={(config) =>
-            onActionChange({
-              ...(action as ProSimInputAction),
-              ...config,
-            } as ProSimInputAction)
-          }
+          adapter={proSimInputActionAdapter}
+          config={action as ProSimInputAction}
+          onConfigChange={(c) => onActionChange(c)}
         />
       )
     case "LuaMacroInputAction":
